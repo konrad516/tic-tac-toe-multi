@@ -196,7 +196,12 @@ int main(int argc, char *argv[])
 						exit(1);
 				}
 		}
-		/*TODO: close all sockets*/
+		/*TODO: close all sockets  - done but to be checked */
+		close(fd[PEER]);
+		close(fd[SERV]);
+		close(fd[LIST]);
+		close(fd[CONN]);
+		
 		printf("END OF MAIN\n");
 
 }
