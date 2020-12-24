@@ -320,8 +320,13 @@ void tic_tac_toe(int socket, char *buf, int player_id)
 
 		if (player == player_id)
 		{
-			printf("\nPlayer %s enter the number: ", my_name);
+			printf("\nPlayer %s enter number: ", my_name);
 			scanf("%d", &choice);
+			while(!check_move(board, choice))
+			{
+				printf("\nPlayer %s enter correct number: ", my_name);
+				scanf("%d", &choice);
+			}
 			send(datasocket, &choice, sizeof(choice, 0));
 		}
 		else
@@ -331,10 +336,13 @@ void tic_tac_toe(int socket, char *buf, int player_id)
 			printf("\nPlayer %s move is: %d", opp_name, go);
 		}
 		board[choice-1] = (player == 1) ? 'X' : 'O';
+		player++;
 
 	} while (check_win(board));
+//	draw_board(board);
+
 }
-}
+
 
 void draw_board(char *board)
 {
