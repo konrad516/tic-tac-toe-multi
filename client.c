@@ -187,7 +187,6 @@ int main(int argc, char *argv[])
 				if(player_accpt)
 					while(tic_tac_toe(fd[CONN],data_buffer,playerID));
 
-				
 				/*after disconnect, recreate thread to start communication
 				 * with server and keep socket's fd open for other peers*/
 				res[MINE] = 0;
@@ -298,12 +297,21 @@ void *peer_thread(char *addr)
 		len = recv(fd[PEER], data_buffer, MAX_RCV_LEN, 0);
 		data_buffer[len] = '\0';
 		if (strcmp(data_buffer, "y") == 0) {
-				/*TODO: LOGIC*/
-				printf("YES\n");
+				res[MINE] = 0;
+				res[OPP] = 0;
+				printf("ACCEPTED\n");
+				player_accpt=1;
 		} else {
-				/*TODO: LOGIC*/
-				printf("NO\n");
+				res[MINE] = 0;
+				res[OPP] = 0;
+				printf("\n%s declined\n",opp_name);
+				player_accpt=0;
 		}
+				
+		int playerID=1;
+		if(player_accpt)
+				while(tic_tac_toe(fd[CONN],data_buffer,playerID));
+
 		/*TODO: LOGIC*/
 		opp_name[0] = '\0';
 		close(fd[PEER]);
