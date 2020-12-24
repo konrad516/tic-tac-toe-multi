@@ -36,6 +36,8 @@ void tic_tac_toe(int socket, char *buf, int player_id);
 
 void draw_board(char* board);
 
+uint8_t check_win(char* board);
+
 /*
  * STATIC VARIABLES
  */
@@ -301,20 +303,48 @@ void *peer_thread(char *addr)
 
 void tic_tac_toe(int socket, char *buf, int player_id)
 {
-		char board[]={'1','2','3','4','5','6','7','8','9'};
-		draw_board(board);
+	char board[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+	draw_board(board);
 }
 
-void draw_board(char* board)
+void draw_board(char *board)
 {
-    	printf(" ___ ___ ___\n");
-		printf("|   |   |   |\n");
-		printf("| %c | %c | %c |\n",board[0],board[1],board[2]);
-		printf("|___|___|___|\n");
-		printf("|   |   |   |\n");
-		printf("| %c | %c | %c |\n",board[3],board[4],board[5]);
-		printf("|___|___|___|\n");
-		printf("|   |   |   |\n");
-		printf("| %c | %c | %c |\n",board[6],board[7],board[8]);
-		printf("|___|___|___|\n");
+	printf(" ___ ___ ___\n");
+	printf("|   |   |   |\n");
+	printf("| %c | %c | %c |\n", board[0], board[1], board[2]);
+	printf("|___|___|___|\n");
+	printf("|   |   |   |\n");
+	printf("| %c | %c | %c |\n", board[3], board[4], board[5]);
+	printf("|___|___|___|\n");
+	printf("|   |   |   |\n");
+	printf("| %c | %c | %c |\n", board[6], board[7], board[8]);
+	printf("|___|___|___|\n");
+}
+
+//return 1 if there is a winner
+//return 2 if there is no winner, game is done
+// return 0 if game is in progress
+uint8_t check_win(char *board)
+{
+	for (int i = 0; i < 9; i += 3)
+	{
+		if (board[j] == board[j + 1] && board[j] == board[j + 2])
+			return 1;
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (board[j] == board[j + 3] && board[j] == board[j + 6])
+			return 1;
+	}
+
+	if (board[0] == board[4] && board[0] == board[8] || board[2] == board[4] && board[2] == board[6])
+		return 1;
+
+	for (int i = 0; i < 9; i++)
+	{
+		if (board[i] == i + '0')
+			return 0;
+	}
+	return 2;
 }
