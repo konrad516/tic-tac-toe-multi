@@ -34,7 +34,7 @@ void *peer_thread(char *addr);
 
 void tic_tac_toe(int socket, char *buf, int player_id);
 
-void draw_board();
+void draw_board(char* board);
 
 /*
  * STATIC VARIABLES
@@ -301,12 +301,12 @@ void *peer_thread(char *addr)
 
 void tic_tac_toe(int socket, char *buf, int player_id)
 {
-		
+		char board[]={'1','2','3','4','5','6','7','8','9'};
+		draw_board(board);
 }
 
-void draw_board()
+void draw_board(char* board)
 {
-    	char board[]={'1','2','3','4','5','6','7','8','9'};
     	printf(" ___ ___ ___\n");
 		printf("|   |   |   |\n");
 		printf("| %c | %c | %c |\n",board[0],board[1],board[2]);
