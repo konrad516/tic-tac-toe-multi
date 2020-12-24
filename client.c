@@ -330,7 +330,7 @@ void tic_tac_toe(int socket, char *buf, int player_id)
 			rec_len = recv(datasocket, &choice, MAX_RCV_LEN, 0);
 			printf("\nPlayer %s move is: %d", opp_name, go);
 		}
-		board[choice] = (player == 1) ? 'X' : 'O';
+		board[choice-1] = (player == 1) ? 'X' : 'O';
 
 	} while (check_win(board));
 }
@@ -378,6 +378,14 @@ uint8_t check_win(char *board)
 	return 2;
 }
 
+//return 1 if move is ok
+// return 0 if move is not ok
 uint8_t check_move(char *board, int choice)
 {
+	if (choice < 1 || choice > 9)
+		return 0;
+	else if (board[choice - 1] != choice + '0')
+		return 0;
+	else
+		return 1;
 }
