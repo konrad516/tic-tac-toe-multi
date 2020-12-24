@@ -368,7 +368,6 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 
 	//ask to play one more game
 	printf("\nDo you wanna play one more round? (y/n) ");
-	scanf("%c", &buf);
 	fgetc(stdin);
 	fgets(buf, sizeof buf, stdin);
 	buf[strlen(buf) - 1] = '\0';
