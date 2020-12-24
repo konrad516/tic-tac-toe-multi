@@ -8,7 +8,7 @@ CHANGELOG:
 24.12.2020
 >Peer to Peer connection established
 
-KONSPEKT 
+KONSPEKT - 
 Gra w kółko i krzyżyk w trybie wieloosobowym
 Jan Kuliga, Krzysztof Bera, Konrad Sikora
 
