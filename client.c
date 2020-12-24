@@ -308,6 +308,9 @@ void *peer_thread(char *addr)
 		pthread_exit(0);
 }
 
+//return 0 if game is in progress
+//return 1 if player doesnt want to play
+//return 2 if opponent doesnt want to play
 uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 {
 	int datasocket = socket;
@@ -357,7 +360,7 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 		else
 		{
 			res[OPP]++;
-			printf("\n%s are winner\n%s your score is: %d\nyour opponet %s score is: %d", opp_name, my_name, res[MINE], opp_name, res[OPP]);
+			printf("\n%s is winner\n%s your score is: %d\nyour opponet %s score is: %d", opp_name, my_name, res[MINE], opp_name, res[OPP]);
 		}
 	}
 	else //there is no winner, game is done
@@ -368,10 +371,28 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 	scanf("%c", &buf);
 	fgetc(stdin);
 	fgets(buf, sizeof buf, stdin);
-	buf[strlen(buf)-1] = '\0';
+	buf[strlen(buf) - 1] = '\0';
 	printf("\nWating for %s response\n", opp_name);
 
+	if (strcmp(buf, "y") != 0)
+	{
+		printf("\n%s you dont want to play\n", my_name);
+		res[MINE] = 0;
+		res[OPP] = 0;
+		return 1;
+	}
 
+	send(datasocket, buf, strlen(buf), 0);
+	rec_len = recv(datasocket, buf, MAX_RCV_LEN, 0);
+	buf[rec_len] = '\0';
+	if (strcmp(buf, "y") != 0 && ingame == 1)
+	{
+		printf("\n%s doesnt want to play\n", opp_name);
+		res[MINE] = 0;
+		res[OPP] = 0;
+		return 2;
+	}
+	return 0;
 }
 
 void draw_board(char *board)
