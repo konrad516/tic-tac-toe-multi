@@ -341,11 +341,10 @@ void tic_tac_toe(int socket, char *buf, int player_id)
 	} while (check_win(board));
 
 	draw_board(board);
-	player--;
 
 	if (check_win(board) == 1) //game is done, player won
 	{
-		if (player == player_id)
+		if (--player == player_id)
 		{
 			res[MINE]++;
 			printf("\n%s you are winner\n%s your score is: %d\nyour opponet %s score is: %d", my_name, my_name, res[MINE], opp_name, res[OPP]);
