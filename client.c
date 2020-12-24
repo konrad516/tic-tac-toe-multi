@@ -357,7 +357,15 @@ void tic_tac_toe(int socket, char *buf, int player_id)
 	}
 	else //there is no winner, game is done
 		printf("\nDRAW\n%s your score is: %d\nyour opponet %s score is: %d", my_name, res[MINE], opp_name, res[OPP]);
-}
+
+	//ask to play one more game
+	printf("\nDo you wanna play one more round? (y/n) ");
+	fgetc(stdin);
+	fgets(buf, sizeof buf, stdin);
+	buf[strlen(buf)-1] = '\0';
+	printf("\nWating for %s response\n", opp_name);
+
+
 
 void draw_board(char *board)
 {
