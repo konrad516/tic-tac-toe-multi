@@ -38,6 +38,8 @@ void draw_board(char* board);
 
 uint8_t check_win(char* board);
 
+uint8_t check_move(char*board, int choice)
+
 /*
  * STATIC VARIABLES
  */
@@ -307,10 +309,10 @@ void tic_tac_toe(int socket, char *buf, int player_id)
 	int rec_len;
 	char board[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
 	int player = 1;
-	int choice;
+	int choice = 0;
 	draw_board(board);
 
-	while (!check_win(board))
+	do
 	{
 		draw_board(board);
 
@@ -326,9 +328,11 @@ void tic_tac_toe(int socket, char *buf, int player_id)
 		{
 			printf("\nWaiting for %s move", opp_name);
 			rec_len = recv(datasocket, &choice, MAX_RCV_LEN, 0);
-			printf("Player %s move is: %d", opp_name, go);
+			printf("\nPlayer %s move is: %d", opp_name, go);
 		}
-	}
+		board[choice] = (player == 1) ? 'X' : 'O';
+
+	} while (check_win(board));
 }
 }
 
@@ -372,4 +376,8 @@ uint8_t check_win(char *board)
 			return 0;
 	}
 	return 2;
+}
+
+uint8_t check_move(char *board, int choice)
+{
 }
