@@ -274,6 +274,7 @@ void *peer_thread(char *addr)
 {
 		char data_buffer[MAX_RCV_LEN + 1]; 
 		int len;
+		int player_accpt;
 		struct sockaddr_in peer_addr;
 		memset(&peer_addr, 0, sizeof(peer_addr));
 		if (inet_pton(AF_INET, addr, &peer_addr.sin_addr) <= 0) {
@@ -346,7 +347,7 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 				printf("\nPlayer %s enter correct number: ", my_name);
 				scanf("%d", &choice);
 			}
-			send(datasocket, &choice, sizeof(choice, 0));
+			send(datasocket, &choice, sizeof(choice), 0);
 		}
 		else
 		{
