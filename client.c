@@ -38,7 +38,7 @@ void draw_board(char* board);
 
 uint8_t check_win(char* board);
 
-uint8_t check_move(char*board, int choice)
+uint8_t check_move(char*board, int choice);
 
 /*
  * STATIC VARIABLES
@@ -426,13 +426,13 @@ uint8_t check_win(char *board)
 {
 	for (int i = 0; i < 9; i += 3)
 	{
-		if (board[j] == board[j + 1] && board[j] == board[j + 2])
+		if (board[i] == board[i + 1] && board[i] == board[i + 2])
 			return 1;
 	}
 
 	for (int i = 0; i < 3; i++)
 	{
-		if (board[j] == board[j + 3] && board[j] == board[j + 6])
+		if (board[i] == board[i + 3] && board[i] == board[i + 6])
 			return 1;
 	}
 
