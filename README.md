@@ -1,8 +1,4 @@
-KONSPEKT
-
 Gra w kółko i krzyżyk w trybie wieloosobowym
-
-Jan Kuliga, Krzysztof Bera, Konrad Sikora
 
 ZAŁOŻENIA:
 Gra w kółko i krzyżyk umożliwiająca jednoczesną rozgrywkę wielu osobom korzystającym z urządzeń będących w jednej sieci lokalnej (LAN).
@@ -19,3 +15,5 @@ IPv4
 
 STYL KODU:
 https://www.kernel.org/doc/html/v4.10/process/coding-style.html
+
+Autorzy: Jan Kuliga, Krzysztof Bera, Konrad Sikora
