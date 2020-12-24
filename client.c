@@ -305,6 +305,11 @@ void tic_tac_toe(int socket, char *buf, int player_id)
 {
 	char board[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
 	draw_board(board);
+
+	while(!check_win(board))
+	{
+		draw_board(board);
+	}
 }
 
 void draw_board(char *board)
@@ -321,7 +326,7 @@ void draw_board(char *board)
 	printf("|___|___|___|\n");
 }
 
-//return 1 if there is a winner
+//return 1 if there is a winner, game is done
 //return 2 if there is no winner, game is done
 // return 0 if game is in progress
 uint8_t check_win(char *board)
