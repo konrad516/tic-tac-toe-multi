@@ -303,13 +303,33 @@ void *peer_thread(char *addr)
 
 void tic_tac_toe(int socket, char *buf, int player_id)
 {
+	int datasocket = socket;
+	int rec_len;
 	char board[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+	int player = 1;
+	int choice;
 	draw_board(board);
 
-	while(!check_win(board))
+	while (!check_win(board))
 	{
 		draw_board(board);
+
+		player = (player % 2) ? 1 : 2;
+
+		if (player == player_id)
+		{
+			printf("\nPlayer %s enter the number: ", my_name);
+			scanf("%d", &choice);
+			send(datasocket, &choice, sizeof(choice, 0));
+		}
+		else
+		{
+			printf("\nWaiting for %s move", opp_name);
+			rec_len = recv(datasocket, &choice, MAX_RCV_LEN, 0);
+			printf("Player %s move is: %d", opp_name, go);
+		}
 	}
+}
 }
 
 void draw_board(char *board)
