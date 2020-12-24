@@ -322,7 +322,7 @@ void tic_tac_toe(int socket, char *buf, int player_id)
 		{
 			printf("\nPlayer %s enter number: ", my_name);
 			scanf("%d", &choice);
-			while(!check_move(board, choice))
+			while (!check_move(board, choice))
 			{
 				printf("\nPlayer %s enter correct number: ", my_name);
 				scanf("%d", &choice);
@@ -335,14 +335,30 @@ void tic_tac_toe(int socket, char *buf, int player_id)
 			rec_len = recv(datasocket, &choice, MAX_RCV_LEN, 0);
 			printf("\nPlayer %s move is: %d", opp_name, go);
 		}
-		board[choice-1] = (player == 1) ? 'X' : 'O';
+		board[choice - 1] = (player == 1) ? 'X' : 'O';
 		player++;
 
 	} while (check_win(board));
-//	draw_board(board);
 
+	draw_board(board);
+	player--;
+
+	if (check_win(board) == 1) //game is done, player won
+	{
+		if (player == player_id)
+		{
+			res[MINE]++;
+			printf("\n%s you are winner\n%s your score is: %d\nyour opponet %s score is: %d", my_name, my_name, res[MINE], opp_name, res[OPP]);
+		}
+		else
+		{
+			res[OPP]++;
+			printf("\n%s are winner\n%s your score is: %d\nyour opponet %s score is: %d", opp_name, my_name, res[MINE], opp_name, res[OPP]);
+		}
+	}
+	else //there is no winner, game is done
+		printf("\nDRAW\n%s your score is: %d\nyour opponet %s score is: %d", my_name, res[MINE], opp_name, res[OPP]);
 }
-
 
 void draw_board(char *board)
 {
