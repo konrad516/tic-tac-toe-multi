@@ -77,6 +77,7 @@ int main(int argc, char *argv[])
 		socklen_t addr_len;
 		char data_buffer[MAX_RCV_LEN];
 		int port, len;
+		int player_accpt;
 		
 		/*turn off stdout buffering, doesn't have to be done on every OS;
 		 * that can be harsh, really*/
@@ -173,17 +174,19 @@ int main(int argc, char *argv[])
 						res[MINE] = 0;
 						res[OPP] = 0;
 						printf("ACCEPTED\n");
-						/*TODO: logic*/
+						player_accpt=1;
+						send(fd[CONN], data_buffer, strlen(data_buffer), 0);
 				} else {
 						res[MINE] = 0;
 						res[OPP] = 0;
 						printf("NOT ACCEPTED\n");
-						/*TODO: logic*/
+						player_accpt=0;
 				}
 				
-				/*TODO: game logic, cancel connection until one of players declines*/
-				
-				
+				int playerID=2;
+				if(player_accpt)
+					while(tic_tac_toe(fd[CONN],data_buffer,playerID));
+
 				
 				/*after disconnect, recreate thread to start communication
 				 * with server and keep socket's fd open for other peers*/
