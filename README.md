@@ -1,4 +1,5 @@
-#KONSPEKT
+KONSPEKT
+
 Gra w kółko i krzyżyk w trybie wieloosobowym
 Jan Kuliga, Krzysztof Bera, Konrad Sikora
 
