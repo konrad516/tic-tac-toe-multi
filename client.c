@@ -27,11 +27,14 @@
 /*
  * FUNCTION PROTOTYPES
  */
-void tic_tac_toe(int socket, char *buf, int player_id);
-
+ 
 void *server_thread(void* par);
 
 void *peer_thread(char *addr);
+
+void tic_tac_toe(int socket, char *buf, int player_id);
+
+void draw_board();
 
 /*
  * STATIC VARIABLES
@@ -296,19 +299,22 @@ void *peer_thread(char *addr)
 		pthread_exit(0);
 }
 
+void tic_tac_toe(int socket, char *buf, int player_id)
+{
+		
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void draw_board()
+{
+    	char board[]={'1','2','3','4','5','6','7','8','9'};
+    	printf(" ___ ___ ___\n");
+		printf("|   |   |   |\n");
+		printf("| %c | %c | %c |\n",board[0],board[1],board[2]);
+		printf("|___|___|___|\n");
+		printf("|   |   |   |\n");
+		printf("| %c | %c | %c |\n",board[3],board[4],board[5]);
+		printf("|___|___|___|\n");
+		printf("|   |   |   |\n");
+		printf("| %c | %c | %c |\n",board[6],board[7],board[8]);
+		printf("|___|___|___|\n");
+}
