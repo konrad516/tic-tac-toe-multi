@@ -352,7 +352,7 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 		{
 			printf("\nWaiting for %s move", opp_name);
 			rec_len = recv(datasocket, &choice, MAX_RCV_LEN, 0);
-			printf("\nPlayer %s move is: %d", opp_name, go);
+			printf("\nPlayer %s move is: %d", opp_name, choice);
 		}
 		board[choice - 1] = (player == 1) ? 'X' : 'O';
 		player++;
@@ -395,7 +395,7 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 	send(datasocket, buf, strlen(buf), 0);
 	rec_len = recv(datasocket, buf, MAX_RCV_LEN, 0);
 	buf[rec_len] = '\0';
-	if (strcmp(buf, "y") != 0 && ingame == 1)
+	if (strcmp(buf, "y") != 0)
 	{
 		printf("\n%s doesnt want to play\n", opp_name);
 		res[MINE] = 0;
