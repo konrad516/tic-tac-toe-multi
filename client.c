@@ -32,7 +32,7 @@ void *server_thread(void* par);
 
 void *peer_thread(char *addr);
 
-void tic_tac_toe(int socket, char *buf, int player_id);
+uint8_t tic_tac_toe(int socket, char *buf, int player_id);
 
 void draw_board(char* board);
 
@@ -303,7 +303,7 @@ void *peer_thread(char *addr)
 		pthread_exit(0);
 }
 
-void tic_tac_toe(int socket, char *buf, int player_id)
+uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 {
 	int datasocket = socket;
 	int rec_len;
@@ -360,12 +360,14 @@ void tic_tac_toe(int socket, char *buf, int player_id)
 
 	//ask to play one more game
 	printf("\nDo you wanna play one more round? (y/n) ");
+	scanf("%c", &buf);
 	fgetc(stdin);
 	fgets(buf, sizeof buf, stdin);
 	buf[strlen(buf)-1] = '\0';
 	printf("\nWating for %s response\n", opp_name);
 
 
+}
 
 void draw_board(char *board)
 {
