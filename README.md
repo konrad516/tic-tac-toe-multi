@@ -3,7 +3,7 @@ To compile both server and client under Linux distro, use following command: 'gc
 
 CHANGELOG:
 23.12.2020
->Established connection with server
+>Established connection with server\n
 >Basic interaction with server
 
 24.12.2020
