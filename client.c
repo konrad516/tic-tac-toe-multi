@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
 				exit(1);
 		}
 		
-		if ((fd[CONN] = accept(fd[LIST], (struct sockaddr*) &addr[PEER], &addr_len) < 0)) {
+		if ((fd[CONN] = accept(fd[LIST], (struct sockaddr*) &addr[PEER_], &addr_len)) < 0) {
 				fprintf(stderr, "Critical failure during accepting request.\n");
 				exit(1);
 		}
@@ -149,21 +149,28 @@ int main(int argc, char *argv[])
 				/*server thread reads constantly from input stream,
 				 * in order to redirect it to peer you have to cancel that thread,
 				 * connection with server is still established though*/
+				 printf("IS THREAD CANCELLED\n");
 				pthread_cancel(thr_id);
-				
+				printf("THREAD CANCELLED\n");
 				len = recv(fd[CONN], data_buffer, MAX_RCV_LEN, 0);
 				data_buffer[len] = '\0';
 				strcpy(opp_name, data_buffer);
 				printf("\n%s invited you. Accept challenge (y/n) ?", opp_name);
 				
+				fgets(data_buffer, sizeof(data_buffer), stdin);
+				data_buffer[strlen(data_buffer) - 1] = '\0';
+				send(fd[CONN], data_buffer, strlen(data_buffer), 0);
+				
 				/*approve*/
 				if (strcmp(data_buffer, "y") == 0) {
 						res[MINE] = 0;
 						res[OPP] = 0;
+						printf("ACCEPTED\n");
 						/*TODO: logic*/
 				} else {
 						res[MINE] = 0;
 						res[OPP] = 0;
+						printf("NOT ACCEPTED\n");
 						/*TODO: logic*/
 				}
 				
@@ -177,12 +184,13 @@ int main(int argc, char *argv[])
 				res[OPP] = 0;
 				opp_name[0] = '\0';
 				pthread_create(&thr_id, NULL, server_thread, (void*) &fd[SERV]);
-				if ((fd[CONN] = accept(fd[LIST], (struct sockaddr*) &addr[PEER], &addr_len) < 0)) {
+				if ((fd[CONN] = accept(fd[LIST], (struct sockaddr*) &addr[PEER_], &addr_len) < 0)) {
 						fprintf(stderr, "Critical failure during accepting request.\n");
 						exit(1);
 				}
 		}
 		/*TODO: close all sockets*/
+		printf("END OF MAIN\n");
 
 }
 
@@ -268,7 +276,7 @@ void *peer_thread(char *addr)
 		
 		printf("Sending invite\n");
 		
-		if (connect(fd[PEER], (struct sockaddr*) &addr[PEER], sizeof(struct sockaddr)) < 0)
+		if (connect(fd[PEER], (struct sockaddr*) &peer_addr, sizeof(struct sockaddr)) < 0)
 				fprintf(stderr, "Critical failure during connect.\n");
 		
 		send(fd[PEER], my_name, strlen(my_name), 0);
