@@ -17,3 +17,5 @@ STYL KODU:
 https://www.kernel.org/doc/html/v4.10/process/coding-style.html
 
 Autorzy: Jan Kuliga, Krzysztof Bera, Konrad Sikora
+
+Kompilacja (Linux distro): gcc -o server/client -W strmap.c -pthread server.c/client.c
