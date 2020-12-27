@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
 						player_accpt=0;
 				}
 				
-				int player_id=2;
+				int player_id=1;
 				if(player_accpt)
 					while(!tic_tac_toe(fd[CONN],data_buffer,player_id));
 
@@ -309,7 +309,7 @@ void *peer_thread(char *addr)
 				player_accpt=0;
 		}
 				
-		int player_id=1;
+		int player_id=2;
 		if(player_accpt)
 				while(!tic_tac_toe(fd[CONN],data_buffer,player_id));
 
@@ -325,7 +325,7 @@ void *peer_thread(char *addr)
 //return 2 if opponent doesnt want to play
 uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 {
-	int datasocket = socket;
+	int data_socket = socket;
 	int rec_len;
 	char board[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
 	int player = 1;
@@ -346,12 +346,12 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 				printf("\nPlayer %s enter correct number: ", my_name);
 				scanf("%d", &choice);
 			}
-			send(datasocket, &choice, sizeof(choice), 0);
+			send(data_socket, &choice, sizeof(choice), 0);
 		}
 		else
 		{
 			printf("\nWaiting for %s move", opp_name);
-			rec_len = recv(datasocket, &choice, MAX_RCV_LEN, 0);
+			rec_len = recv(data_socket, &choice, MAX_RCV_LEN, 0);
 			printf("\nPlayer %s move is: %d", opp_name, choice);
 		}
 		board[choice - 1] = (player == 1) ? 'X' : 'O';
@@ -392,8 +392,8 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 		return 1;
 	}
 
-	send(datasocket, buf, strlen(buf), 0);
-	rec_len = recv(datasocket, buf, MAX_RCV_LEN, 0);
+	send(data_socket, buf, strlen(buf), 0);
+	rec_len = recv(data_socket, buf, MAX_RCV_LEN, 0);
 	buf[rec_len] = '\0';
 	if (strcmp(buf, "y") != 0)
 	{
@@ -407,7 +407,7 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 
 void draw_board(char *board)
 {
-	printf(" ___ ___ ___\n");
+	printf(" \n ___ ___ ___\n");
 	printf("|   |   |   |\n");
 	printf("| %c | %c | %c |\n", board[0], board[1], board[2]);
 	printf("|___|___|___|\n");
