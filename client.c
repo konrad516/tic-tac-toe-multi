@@ -183,9 +183,9 @@ int main(int argc, char *argv[])
 						player_accpt=0;
 				}
 				
-				int playerID=2;
+				int player_id=2;
 				if(player_accpt)
-					while(tic_tac_toe(fd[CONN],data_buffer,playerID));
+					while(tic_tac_toe(fd[CONN],data_buffer,player_id));
 
 				/*after disconnect, recreate thread to start communication
 				 * with server and keep socket's fd open for other peers*/
@@ -309,9 +309,9 @@ void *peer_thread(char *addr)
 				player_accpt=0;
 		}
 				
-		int playerID=1;
+		int player_id=1;
 		if(player_accpt)
-				while(tic_tac_toe(fd[CONN],data_buffer,playerID));
+				while(tic_tac_toe(fd[CONN],data_buffer,player_id));
 
 		/*TODO: LOGIC*/
 		opp_name[0] = '\0';
@@ -330,7 +330,6 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 	char board[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
 	int player = 1;
 	int choice = 0;
-	draw_board(board);
 
 	do
 	{
