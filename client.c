@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
 						player_accpt=0;
 				}
 				
-				int player_id=1;
+				int player_id=2;
 				if(player_accpt)
 					while(!tic_tac_toe(fd[CONN],data_buffer,player_id));
 
@@ -309,9 +309,9 @@ void *peer_thread(char *addr)
 				player_accpt=0;
 		}
 				
-		int player_id=2;
+		int player_id=1;
 		if(player_accpt)
-				while(!tic_tac_toe(fd[CONN],data_buffer,player_id));
+				while(!tic_tac_toe(fd[PEER],data_buffer,player_id));
 
 		/*TODO: LOGIC*/
 		opp_name[0] = '\0';
