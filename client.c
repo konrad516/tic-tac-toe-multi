@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
 				/*server thread reads constantly from input stream,
 				 * in order to redirect it to peer you have to cancel that thread,
 				 * connection with server is still established though*/
-				 printf("IS THREAD CANCELLED\n");
+				printf("IS THREAD CANCELLED\n");
 				pthread_cancel(thr_id);
 				printf("THREAD CANCELLED\n");
 				len = recv(fd[CONN], data_buffer, MAX_RCV_LEN, 0);
@@ -167,7 +167,6 @@ int main(int argc, char *argv[])
 				
 				fgets(data_buffer, sizeof(data_buffer), stdin);
 				data_buffer[strlen(data_buffer) - 1] = '\0';
-				send(fd[CONN], data_buffer, strlen(data_buffer), 0);
 				
 				/*approve*/
 				if (strcmp(data_buffer, "y") == 0) {
