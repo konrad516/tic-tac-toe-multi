@@ -336,6 +336,7 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 		draw_board(board);
 
 		player = (player % 2) ? 1 : 2;
+		player++;
 
 		if (player == player_id)
 		{
@@ -355,9 +356,9 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 			printf("\nPlayer %s move is: %d", opp_name, choice);
 		}
 		board[choice - 1] = (player == 1) ? 'X' : 'O';
-		player++;
+		
 
-	} while (check_win(board));
+	} while (!check_win(board));
 
 	draw_board(board);
 
@@ -441,7 +442,7 @@ uint8_t check_win(char *board)
 
 	for (int i = 0; i < 9; i++)
 	{
-		if (board[i] == i + '0')
+		if (board[i] == i + '1')
 			return 0;
 	}
 	return 2;
