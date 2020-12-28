@@ -317,7 +317,7 @@ void *peer_thread(char *addr)
 		opp_name[0] = '\0';
 		close(fd[PEER]);
 		pthread_create(&thr_id, NULL, server_thread, &fd[SERV]);
-        pthread_exit(0);
+        	pthread_exit(0);
 }
 
 //return 0 if game is in progress
@@ -327,7 +327,7 @@ uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 {
 		static int number_of_games = 0;
 		number_of_games++;			// this variable is incremented before every game
-        int data_socket = socket;
+        	int data_socket = socket;
 		int rec_len;
 		char board[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
 		int player = (number_of_games % 2 == 1) ? 1 : 2;
