@@ -325,10 +325,12 @@ void *peer_thread(char *addr)
 //return 2 if opponent doesnt want to play
 uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 {
+		static int number_of_games = 0;
+		number_of_games++;			// this variable is incremented before every game
         int data_socket = socket;
 		int rec_len;
 		char board[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
-		int player = 1;
+		int player = (number_of_games % 2 == 1) ? 1 : 2;
 		int choice = 0;
 
 		while (!check_win(board)){
