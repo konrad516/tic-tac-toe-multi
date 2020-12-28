@@ -213,6 +213,7 @@ void *server_thread(void *par)
 		char data_buffer[MAX_RCV_LEN + 1];
 		int len, n;
 		char arg1[STR_LEN], arg2[STR_LEN];
+		
 		/*set cancel state so that it can be cancelled outside this function*/
 		pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
 		
@@ -316,7 +317,7 @@ void *peer_thread(char *addr)
 		opp_name[0] = '\0';
 		close(fd[PEER]);
 		pthread_create(&thr_id, NULL, server_thread, &fd[SERV]);
-		pthread_exit(0);
+        pthread_exit(0);
 }
 
 //return 0 if game is in progress
@@ -324,98 +325,90 @@ void *peer_thread(char *addr)
 //return 2 if opponent doesnt want to play
 uint8_t tic_tac_toe(int socket, char *buf, int player_id)
 {
-	int data_socket = socket;
-	int rec_len;
-	char board[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
-	int player = 1;
-	int choice = 0;
+        int data_socket = socket;
+		int rec_len;
+		char board[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+		int player = 1;
+		int choice = 0;
 
-	while (!check_win(board))
-	{
+		while (!check_win(board)){
+				draw_board(board);
+
+				player = (player % 2) ? 1 : 2;
+
+				if (player == player_id){
+						printf("\nPlayer %s enter number: ", my_name);
+						scanf("%d", &choice);
+						while (!check_move(board, choice)){
+							printf("\nPlayer %s enter correct number: ", my_name);
+							scanf("%d", &choice);
+						}
+						send(data_socket, &choice, sizeof(choice), 0);
+				} else {
+						printf("\nWaiting for %s move", opp_name);
+						rec_len = recv(data_socket, &choice, MAX_RCV_LEN, 0);
+						printf("\nPlayer %s move is: %d", opp_name, choice);
+				}
+				board[choice - 1] = (player == 1) ? 'X' : 'O';
+				player++;
+		} 
+
 		draw_board(board);
 
-		player = (player % 2) ? 1 : 2;
-
-		if (player == player_id)
-		{
-			printf("\nPlayer %s enter number: ", my_name);
-			scanf("%d", &choice);
-			while (!check_move(board, choice))
-			{
-				printf("\nPlayer %s enter correct number: ", my_name);
-				scanf("%d", &choice);
-			}
-			send(data_socket, &choice, sizeof(choice), 0);
+		if (check_win(board) == 1){ //game is done, player won
+				if (--player == player_id){
+						res[MINE]++;
+						printf("\n%s you are winner\n%s your score is: %d\nyour opponet %s score is: %d",
+								my_name, my_name, res[MINE], opp_name, res[OPP]);
+				}
+				else{
+						res[OPP]++;
+						printf("\n%s is winner\n%s your score is: %d\nyour opponet %s score is: %d",
+								 opp_name, my_name, res[MINE], opp_name, res[OPP]);
+				}
 		}
-		else
-		{
-			printf("\nWaiting for %s move", opp_name);
-			rec_len = recv(data_socket, &choice, MAX_RCV_LEN, 0);
-			printf("\nPlayer %s move is: %d", opp_name, choice);
+		else //there is no winner, game is done
+				printf("\nDRAW\n%s your score is: %d\nyour opponet %s score is: %d",
+						my_name, res[MINE], opp_name, res[OPP]);
+
+		//ask to play one more game
+		printf("\nDo you wanna play one more round? (y/n) ");
+		fgetc(stdin);
+		fgets(buf, sizeof buf, stdin);
+		buf[strlen(buf) - 1] = '\0';
+		printf("\nWating for %s response\n", opp_name);
+
+		if (strcmp(buf, "y") != 0) {
+				printf("\n%s you dont want to play\n", my_name);
+				res[MINE] = 0;
+				res[OPP] = 0;
+				return 1;
 		}
-		board[choice - 1] = (player == 1) ? 'X' : 'O';
-		player++;
 
-	} 
-
-	draw_board(board);
-
-	if (check_win(board) == 1) //game is done, player won
-	{
-		if (--player == player_id)
-		{
-			res[MINE]++;
-			printf("\n%s you are winner\n%s your score is: %d\nyour opponet %s score is: %d", my_name, my_name, res[MINE], opp_name, res[OPP]);
+		send(data_socket, buf, strlen(buf), 0);
+		rec_len = recv(data_socket, buf, MAX_RCV_LEN, 0);
+		buf[rec_len] = '\0';
+		if (strcmp(buf, "y") != 0) {
+				printf("\n%s doesnt want to play\n", opp_name);
+				res[MINE] = 0;
+				res[OPP] = 0;
+				return 2;
 		}
-		else
-		{
-			res[OPP]++;
-			printf("\n%s is winner\n%s your score is: %d\nyour opponet %s score is: %d", opp_name, my_name, res[MINE], opp_name, res[OPP]);
-		}
-	}
-	else //there is no winner, game is done
-		printf("\nDRAW\n%s your score is: %d\nyour opponet %s score is: %d", my_name, res[MINE], opp_name, res[OPP]);
-
-	//ask to play one more game
-	printf("\nDo you wanna play one more round? (y/n) ");
-	fgetc(stdin);
-	fgets(buf, sizeof buf, stdin);
-	buf[strlen(buf) - 1] = '\0';
-	printf("\nWating for %s response\n", opp_name);
-
-	if (strcmp(buf, "y") != 0)
-	{
-		printf("\n%s you dont want to play\n", my_name);
-		res[MINE] = 0;
-		res[OPP] = 0;
-		return 1;
-	}
-
-	send(data_socket, buf, strlen(buf), 0);
-	rec_len = recv(data_socket, buf, MAX_RCV_LEN, 0);
-	buf[rec_len] = '\0';
-	if (strcmp(buf, "y") != 0)
-	{
-		printf("\n%s doesnt want to play\n", opp_name);
-		res[MINE] = 0;
-		res[OPP] = 0;
-		return 2;
-	}
-	return 0;
+		return 0;
 }
 
 void draw_board(char *board)
 {
-	printf(" \n ___ ___ ___\n");
-	printf("|   |   |   |\n");
-	printf("| %c | %c | %c |\n", board[0], board[1], board[2]);
-	printf("|___|___|___|\n");
-	printf("|   |   |   |\n");
-	printf("| %c | %c | %c |\n", board[3], board[4], board[5]);
-	printf("|___|___|___|\n");
-	printf("|   |   |   |\n");
-	printf("| %c | %c | %c |\n", board[6], board[7], board[8]);
-	printf("|___|___|___|\n");
+		printf(" \n ___ ___ ___\n");
+		printf("|   |   |   |\n");
+		printf("| %c | %c | %c |\n", board[0], board[1], board[2]);
+		printf("|___|___|___|\n");
+		printf("|   |   |   |\n");
+		printf("| %c | %c | %c |\n", board[3], board[4], board[5]);
+		printf("|___|___|___|\n");
+		printf("|   |   |   |\n");
+		printf("| %c | %c | %c |\n", board[6], board[7], board[8]);
+		printf("|___|___|___|\n");
 }
 
 //return 1 if there is a winner, game is done
@@ -423,37 +416,34 @@ void draw_board(char *board)
 // return 0 if game is in progress
 uint8_t check_win(char *board)
 {
-	for (int i = 0; i < 9; i += 3)
-	{
-		if (board[i] == board[i + 1] && board[i] == board[i + 2])
-			return 1;
-	}
+		for (int i = 0; i < 9; i += 3) {
+				if (board[i] == board[i + 1] && board[i] == board[i + 2])
+						return 1;
+		}
 
-	for (int i = 0; i < 3; i++)
-	{
-		if (board[i] == board[i + 3] && board[i] == board[i + 6])
-			return 1;
-	}
+		for (int i = 0; i < 3; i++) {
+				if (board[i] == board[i + 3] && board[i] == board[i + 6])
+						return 1;
+		}
 
-	if (board[0] == board[4] && board[0] == board[8] || board[2] == board[4] && board[2] == board[6])
-		return 1;
+		if (board[0] == board[4] && board[0] == board[8] || board[2] == board[4] && board[2] == board[6])
+				return 1;
 
-	for (int i = 0; i < 9; i++)
-	{
-		if (board[i] == i + '1')
-			return 0;
-	}
-	return 2;
+		for (int i = 0; i < 9; i++){
+				if (board[i] == i + '1')
+						return 0;
+		}
+		return 2;
 }
 
 //return 1 if move is ok
 // return 0 if move is not ok
 uint8_t check_move(char *board, int choice)
 {
-	if (choice < 1 || choice > 9)
-		return 0;
-	else if (board[choice - 1] != choice + '0')
-		return 0;
-	else
-		return 1;
+		if (choice < 1 || choice > 9)
+				return 0;
+		else if (board[choice - 1] != choice + '0')
+				return 0;
+		else
+				return 1;
 }
