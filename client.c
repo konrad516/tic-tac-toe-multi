@@ -210,7 +210,11 @@ void *server_thread(void *par)
 	/*set cancel state so that it can be cancelled outside this function*/
 	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
 
-	printf("\nUsage: \n\n join {name}\n list\n invite {player}\n leave\n\n");
+	printf("\n\tWelcome to the tic-tac-toe game!\n");
+	printf("\n\tTo add your nick to server queue, type: join <your nick>");
+	printf("\n\tTo see list of all players waiting in server queue, type: list");
+	printf("\n\tTo invite a player to game, type: invite <nick of player you want to invite>");
+	printf("\n\tTo leave a game, type: leave\n");
 	
 	/*loop used to communicate with server; runs until thread is cancelled
 	or used entered <leave> query*/
@@ -254,7 +258,11 @@ void *server_thread(void *par)
 			close(fd[CONN]);
 			exit(1);
 		} else {
-			printf("\nUsage: \n\n join {name}\n list\n invite {player}\n leave\n\n");
+			printf("\n\tIncorrect command was entered\n");
+			printf("\n\tTo add your nick to server queue, type: join <your nick>");
+			printf("\n\tTo see list of all players waiting in server queue, type: list");
+			printf("\n\tTo invite a player to game, type: invite <nick of player you want to invite>");
+			printf("\n\tTo leave a game, type: leave\n");
 		}
 	}
 }
