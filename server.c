@@ -13,7 +13,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <signal.h>
 #include <arpa/inet.h>
 #include "strmap.h"
 
@@ -31,8 +30,8 @@ enum {
  } addr;
 
  enum {
-	 LISTEN,
-	 CONN
+	LISTEN,
+	CONN
  } sock;
 
 /*
@@ -59,12 +58,10 @@ static StrMap *clients;
 /*mutex variable, used to lock resources*/
 static pthread_mutex_t sync_proc;
 
-/* made it a global variable so that we could close it when sigpipe is generated*/
-int fd[2];
-
 int main(int argc, char *argv[])
 {
 	struct sockaddr_in addr[2];
+	int fd[2];
 	int port;
 	socklen_t addr_len;
 	pthread_t thr_id;
@@ -119,9 +116,6 @@ int main(int argc, char *argv[])
 	
 	printf("Server's setup correct. Waiting for players to join...\n");
 	addr_len = sizeof(addr[CLI]); 
-	
-	/* Register handler of sigpipe signal */
-	signal(SIGPIPE, (__sighandler_t) sig_pipe);
 	
 	/*Server's main loop*/
 	while (1) {
@@ -244,8 +238,6 @@ void clients_list(const void *key, const void *val, void *obj)
 
 void sig_pipe(void)
 {
-	// printf("Server received SIGPIPE - Default action is exit \n");
-	close(fd[CONN]);
-	printf("\nConnection interrupted");
+	printf("Server received SIGPIPE - Default action is exit \n");
 	exit(1);
 }

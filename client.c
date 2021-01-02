@@ -81,12 +81,15 @@ int main(int argc, char *argv[])
 	setvbuf(stdout, NULL, _IONBF, 0);
 	
 	/*reset sockaddr_in structures*/
-	for (int i = 0; i < 3; i++) 
+	for (short i = 0; i < 3; i++) 
 		memset((void*) &addr[i], 0, sizeof(addr[i]));
 	
 	addr[SERV_].sin_family = AF_INET;
-
-	if (inet_pton(AF_INET, argv[1], &addr[SERV_].sin_addr) <= 0) {
+	
+	if (argc == 1) {
+		printf("Server's address not specified. Shutting down...\n");
+		goto exit;
+	} else if (inet_pton(AF_INET, argv[1], &addr[SERV_].sin_addr) <= 0) {
 		fprintf(stderr,"Address error: inet_pton error for %s : %s \n", argv[1], strerror(errno));
 		goto exit;
 	}
@@ -210,11 +213,7 @@ void *server_thread(void *par)
 	/*set cancel state so that it can be cancelled outside this function*/
 	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
 
-	printf("\n\tWelcome to the tic-tac-toe game!\n");
-	printf("\n\tTo add your nick to server queue, type: join <your nick>");
-	printf("\n\tTo see list of all players waiting in server queue, type: list");
-	printf("\n\tTo invite a player to game, type: invite <nick of player you want to invite>");
-	printf("\n\tTo leave a game, type: leave\n");
+	printf("\nUsage: \n\n join {name}\n list\n invite {player}\n leave\n\n");
 	
 	/*loop used to communicate with server; runs until thread is cancelled
 	or used entered <leave> query*/
@@ -258,11 +257,7 @@ void *server_thread(void *par)
 			close(fd[CONN]);
 			exit(1);
 		} else {
-			printf("\n\tIncorrect command was entered\n");
-			printf("\n\tTo add your nick to server queue, type: join <your nick>");
-			printf("\n\tTo see list of all players waiting in server queue, type: list");
-			printf("\n\tTo invite a player to game, type: invite <nick of player you want to invite>");
-			printf("\n\tTo leave a game, type: leave\n");
+			printf("\nUsage: \n\n join {name}\n list\n invite {player}\n leave\n\n");
 		}
 	}
 }
