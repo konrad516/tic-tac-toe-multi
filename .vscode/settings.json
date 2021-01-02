@@ -1,0 +1,14 @@
+{
+        "C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "sameLine",
+        "C_Cpp.vcFormat.indent.braces": true,
+        "C_Cpp.vcFormat.indent.caseContentsWhenBlock": true,
+        "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "newLine",
+        "C_Cpp.vcFormat.newLine.beforeOpenBrace.lambda": "newLine",
+        "C_Cpp.vcFormat.newLine.beforeOpenBrace.namespace": "newLine",
+        "C_Cpp.vcFormat.newLine.beforeOpenBrace.type": "newLine",
+        "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyFunction": true,
+        "C_Cpp.vcFormat.newLine.closeBraceSameLine.emptyType": true,
+        "editor.defaultFormatter": "ms-vscode.cpptools",
+        "C_Cpp.clang_format_fallbackStyle": "file",
+        "C_Cpp.codeFolding": "Disabled"
+}
