@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 		goto exit;
 	}
 	
-	if (connect(fd[SERV], (struct sockaddr*) &addr[SERV_], sizeof(struct sockaddr)) < 0) {
+	if (connect(fd[SERV], (struct sockaddr*) &addr[SERV_], sizeof(addr[SERV_])) < 0) {
 		fprintf(stderr, "Critical failure during connect.\n");
 		goto exit;
 	}
@@ -291,7 +291,7 @@ void *peer_thread(char *addr)
 	
 	printf("Sending invite\n");
 	
-	if (connect(fd[PEER], (struct sockaddr*) &peer_addr, sizeof(struct sockaddr)) < 0) {
+	if (connect(fd[PEER], (struct sockaddr*) &peer_addr, sizeof(peer_addr)) < 0) {
 		fprintf(stderr, "Critical failure during connect.\n");
 		exit(1);
 	}
