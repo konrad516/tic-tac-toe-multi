@@ -86,7 +86,10 @@ int main(int argc, char *argv[])
 	
 	addr[SERV_].sin_family = AF_INET;
 
-	if (inet_pton(AF_INET, argv[1], &addr[SERV_].sin_addr) <= 0) {
+	if (argc == 1) {
+		printf("Server's address not specified. Shutting down...\n");
+		goto exit;
+	} else if (inet_pton(AF_INET, argv[1], &addr[SERV_].sin_addr) <= 0) {
 		fprintf(stderr,"Address error: inet_pton error for %s : %s \n", argv[1], strerror(errno));
 		goto exit;
 	}
