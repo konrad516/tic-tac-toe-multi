@@ -71,7 +71,7 @@ static pthread_t thr_id;
 
 int main(int argc, char *argv[])
 {
-	struct sockaddr_in addr[3];
+	struct sockaddr_in6 addr[3];
 	socklen_t addr_len;
 	char data_buffer[MAX_RCV_LEN];
 	int port, len;
@@ -80,16 +80,16 @@ int main(int argc, char *argv[])
 	/*turn off stdout buffering, doesn't have to be done on every OS*/
 	setvbuf(stdout, NULL, _IONBF, 0);
 	
-	/*reset sockaddr_in structures*/
+	/*reset sockaddr_in6 structures*/
 	for (int i = 0; i < 3; i++) 
 		memset((void*) &addr[i], 0, sizeof(addr[i]));
 	
-	addr[SERV_].sin_family = AF_INET;
+	addr[SERV_].sin6_family = AF_INET6;
 
 	if (argc == 1) {
 		printf("Server's address not specified. Shutting down...\n");
 		goto exit;
-	} else if (inet_pton(AF_INET, argv[1], &addr[SERV_].sin_addr) <= 0) {
+	} else if (inet_pton(AF_INET6, argv[1], &addr[SERV_].sin6_addr) <= 0) {
 		fprintf(stderr,"Address error: inet_pton error for %s : %s \n", argv[1], strerror(errno));
 		goto exit;
 	}
@@ -102,13 +102,13 @@ int main(int argc, char *argv[])
 	
 	/*Check whether specified port is valid*/
 	if (port > 0) {
-		addr[SERV_].sin_port = htons(port);
+		addr[SERV_].sin6_port = htons(port);
 	} else {
 		fprintf(stderr, "Invalid port number. Shutting down client...\n");
 		goto exit;
 	}
 	
-	if ((fd[SERV] = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+	if ((fd[SERV] = socket(AF_INET6, SOCK_STREAM, 0)) < 0) {
 		fprintf(stderr, "Socket failure. Shutting down client...\n");
 		goto exit;
 	}
@@ -122,13 +122,13 @@ int main(int argc, char *argv[])
 	pthread_create(&thr_id, NULL, server_thread, (void*) &fd[SERV]);
 	
 	/*Invite*/
-	addr_len = sizeof(struct sockaddr_in);
+	addr_len = sizeof(struct sockaddr_in6);
 	
-	addr[QUASISERV_].sin_family = AF_INET;
-	addr[QUASISERV_].sin_addr.s_addr = htonl(INADDR_ANY);
-	addr[QUASISERV_].sin_port = htons(PEER_PORT);
+	addr[QUASISERV_].sin6_family = AF_INET6;
+	addr[QUASISERV_].sin6_addr = in6addr_any;//htonl(INADDR_ANY);
+	addr[QUASISERV_].sin6_port = htons(PEER_PORT);
 	
-	if ((fd[LIST] = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+	if ((fd[LIST] = socket(AF_INET6, SOCK_STREAM, 0)) < 0) {
 		fprintf(stderr, "Socket failure. Shutting down client...\n");
 		goto exit;
 	}
@@ -275,16 +275,16 @@ void *peer_thread(char *addr)
 	char data_buffer[MAX_RCV_LEN + 1]; 
 	int len;
 	int player_accpt;
-	struct sockaddr_in peer_addr;
+	struct sockaddr_in6 peer_addr;
 	memset(&peer_addr, 0, sizeof(peer_addr));
-	if (inet_pton(AF_INET, addr, &peer_addr.sin_addr) <= 0) {
+	if (inet_pton(AF_INET6, addr, &peer_addr.sin6_addr) <= 0) {
 		fprintf(stderr,"Address error: inet_pton error for %s : %s \n", addr, strerror(errno));
 		exit(1);
 	}
-	peer_addr.sin_family = AF_INET;
-	peer_addr.sin_port = htons(PEER_PORT);
+	peer_addr.sin6_family = AF_INET6;
+	peer_addr.sin6_port = htons(PEER_PORT);
 	
-	if ((fd[PEER] = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+	if ((fd[PEER] = socket(AF_INET6, SOCK_STREAM, 0)) < 0) {
 		fprintf(stderr, "Socket failure. Shutting down client...\n");
 		exit(1);
 	}

@@ -64,7 +64,7 @@ int fd[2];
 
 int main(int argc, char *argv[])
 {
-	struct sockaddr_in addr[2];
+	struct sockaddr_in6 addr[2];
 	int port;
 	socklen_t addr_len;
 	pthread_t thr_id;
@@ -78,13 +78,13 @@ int main(int argc, char *argv[])
 	/*turn off stdout buffering*/
 	setvbuf(stdout, NULL, _IONBF, 0);
 	
-	/*reset sockaddr_in structures*/
+	/*reset sockaddr_in6 structures*/
 	memset((void*) &addr[SERV], 0, sizeof(addr[SERV]));
 	memset((void*) &addr[CLI], 0, sizeof(addr[CLI]));
 	
 	/*set local IP address*/
-	addr[SERV].sin_family = AF_INET;
-	addr[SERV].sin_addr.s_addr = INADDR_ANY;
+	addr[SERV].sin6_family = AF_INET6;
+	addr[SERV].sin6_addr = in6addr_any;
 	
 	/*Check whether port was specified during server start-up*/
 	if (argc > 1) 
@@ -94,14 +94,14 @@ int main(int argc, char *argv[])
 			
 	/*Check whether specified port is valid*/
 	if (port > 0) {
-		addr[SERV].sin_port = htons(port);
+		addr[SERV].sin6_port = htons(port);
 	} else {
 		fprintf(stderr, "Invalid port number. Shutting down server...\n");
 		goto exit;
 	}
 	
 	/*Create a socket*/
-	if ((fd[LISTEN] = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+	if ((fd[LISTEN] = socket(AF_INET6, SOCK_STREAM, 0)) < 0) {
 		fprintf(stderr, "Critical failure when creating socket. Shutting down server...\n");
 		goto exit;
 	}
@@ -145,8 +145,8 @@ void *server_thread(void *par)
 {
 	int thread_fd;
 	int len;
-	char addr_buf[INET_ADDRSTRLEN];
-	struct sockaddr_in peer_addr;
+	char addr_buf[INET6_ADDRSTRLEN];
+	struct sockaddr_in6 peer_addr;
 	socklen_t addr_len;
 	char data_buf[MAX_RCV_LEN + 1];
 	char player_name[STR_LEN + 1];
@@ -154,7 +154,7 @@ void *server_thread(void *par)
 	/*assign passed file desciptor to new thread*/
 	thread_fd = (*(int*) par);
 
-	/*reset sockaddr_in structure*/
+	/*reset sockaddr_in6 structure*/
 	memset((void*) &peer_addr, 0, sizeof(peer_addr));
 	
 	addr_len = sizeof(peer_addr);
@@ -162,7 +162,7 @@ void *server_thread(void *par)
 	/*retrieve IP address of the peer connected to this particular socket*/
 	getpeername(thread_fd, (struct sockaddr*) &peer_addr, &addr_len);
 	
-	inet_ntop(AF_INET, &(peer_addr.sin_addr), addr_buf, INET_ADDRSTRLEN); 
+	inet_ntop(AF_INET6, &(peer_addr.sin6_addr), addr_buf, INET6_ADDRSTRLEN); 
 	
 	/*thread's main loop*/
 	char arg1[STR_LEN], arg2[STR_LEN];
