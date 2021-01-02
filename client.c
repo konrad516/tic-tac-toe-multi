@@ -313,7 +313,7 @@ void *peer_thread(char *addr)
 			
 	int player_id=1;
 	if(player_accpt)
-		while(!tic_tac_toe(fd[PEER],data_buffer,player_id));
+		while(!tic_tac_toe(fd[PEER], data_buffer, player_id));
 
 	opp_name[0] = '\0';
 	close(fd[PEER]);
