@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 		data_buffer[len] = '\0';
 		strcpy(opp_name, data_buffer);
 
-		printf("\n%s invited you. Accept challenge (y/n) ?", opp_name);
+		printf("\n\t%s invited you. Accept challenge (y/n) ?", opp_name);
 		
 		fgets(data_buffer, sizeof(data_buffer), stdin);
 		data_buffer[strlen(data_buffer) - 1] = '\0';
@@ -171,13 +171,13 @@ int main(int argc, char *argv[])
 		if (strcmp(data_buffer, "y") == 0) {
 			res[MINE] = 0;
 			res[OPP] = 0;
-			printf("ACCEPTED\n");
+			printf("\n\tACCEPTED\n");
 			player_accpt=1;
 			send(fd[CONN], data_buffer, strlen(data_buffer), 0);
 		} else {
 			res[MINE] = 0;
 			res[OPP] = 0;
-			printf("NOT ACCEPTED\n");
+			printf("\n\tNOT ACCEPTED\n");
 			player_accpt=0;
 		}
 		
@@ -289,7 +289,7 @@ void *peer_thread(char *addr)
 		exit(1);
 	}
 	
-	printf("Sending invite\n");
+	printf("\n\tSending invite\n");
 	
 	if (connect(fd[PEER], (struct sockaddr*) &peer_addr, sizeof(peer_addr)) < 0) {
 		fprintf(stderr, "Critical failure during connect.\n");
@@ -302,7 +302,7 @@ void *peer_thread(char *addr)
 	if (strcmp(data_buffer, "y") == 0) {
 		res[MINE] = 0;
 		res[OPP] = 0;
-		printf("Challenge accepted.\n");
+		printf("\nChallenge accepted.\n");
 		player_accpt=1;
 	} else {
 		res[MINE] = 0;
@@ -340,17 +340,17 @@ unsigned short tic_tac_toe(int socket, char *buf, int player_id)
 		player = (player % 2) ? 1 : 2;
 
 		if (player == player_id){
-			printf("\nPlayer %s enter number: ", my_name);
+			printf("\n\tPlayer %s, enter number: ", my_name);
 			scanf("%d", &choice);
 			while (!check_move(board, choice)){
-				printf("\nPlayer %s enter correct number: ", my_name);
+				printf("\n\tPlayer %s, enter correct number: ", my_name);
 				scanf("%d", &choice);
 			}
 			send(data_socket, &choice, sizeof(choice), 0);
 		} else {
-			printf("\nWaiting for %s move", opp_name);
+			printf("\n\tWaiting for %s move", opp_name);
 			rec_len = recv(data_socket, &choice, MAX_RCV_LEN, 0);
-			printf("\nPlayer %s move is: %d", opp_name, choice);
+			printf("\n\tPlayer %s move is: %d", opp_name, choice);
 		}
 		board[choice - 1] = (player == 1) ? 'X' : 'O';
 		player++;
@@ -361,27 +361,27 @@ unsigned short tic_tac_toe(int socket, char *buf, int player_id)
 	if (check_win(board) == 1){ 
 		if (--player == player_id){
 			res[MINE]++;
-			printf("\n%s you are winner\n%s your score is: %d\nyour opponent %s score is: %d",
+			printf("\n\t%s you are winner\n%s your score is: %d\nyour opponent %s score is: %d",
 							my_name, my_name, res[MINE], opp_name, res[OPP]);
 		} else {
 			res[OPP]++;
-			printf("\n%s is winner\n%s your score is: %d\nyour opponent %s score is: %d",
+			printf("\n\t%s is winner\n\t%s your score is: %d\n\tyour opponent %s score is: %d",
 						opp_name, my_name, res[MINE], opp_name, res[OPP]);
 		}
 	} else {
-		printf("\nDRAW\n%s your score is: %d\nyour opponent %s score is: %d",
+		printf("\n\tDRAW\n%s your score is: %d\nyour opponent %s score is: %d",
 				my_name, res[MINE], opp_name, res[OPP]);
 	}
 
 	/*play one more game*/
-	printf("\nDo you wanna play one more round? (y/n) ");
+	printf("\n\tDo you wanna play one more round? (y/n) ");
 	fgetc(stdin);
 	fgets(buf, sizeof buf, stdin);
 	buf[strlen(buf) - 1] = '\0';
-	printf("\nWating for %s response\n", opp_name);
+	printf("\n\tWating for %s response\n", opp_name);
 
 	if (strcmp(buf, "y") != 0) {
-		printf("\n%s you don't want to play\n", my_name);
+		printf("\n\t%s you don't want to play\n", my_name);
 		res[MINE] = 0;
 		res[OPP] = 0;
 		return 1;
@@ -391,7 +391,7 @@ unsigned short tic_tac_toe(int socket, char *buf, int player_id)
 	rec_len = recv(data_socket, buf, MAX_RCV_LEN, 0);
 	buf[rec_len] = '\0';
 	if (strcmp(buf, "y") != 0) {
-		printf("\n%s doesn't want to play\n", opp_name);
+		printf("\n\t%s doesn't want to play\n", opp_name);
 		res[MINE] = 0;
 		res[OPP] = 0;
 		return 2;
@@ -401,16 +401,16 @@ unsigned short tic_tac_toe(int socket, char *buf, int player_id)
 
 void draw_board(char *board)
 {
-	printf(" \n ___ ___ ___\n");
-	printf("|   |   |   |\n");
-	printf("| %c | %c | %c |\n", board[0], board[1], board[2]);
-	printf("|___|___|___|\n");
-	printf("|   |   |   |\n");
-	printf("| %c | %c | %c |\n", board[3], board[4], board[5]);
-	printf("|___|___|___|\n");
-	printf("|   |   |   |\n");
-	printf("| %c | %c | %c |\n", board[6], board[7], board[8]);
-	printf("|___|___|___|\n");
+	printf(" \n\t ___ ___ ___\n");
+	printf("\t|   |   |   |\n");
+	printf("\t| %c | %c | %c |\n", board[0], board[1], board[2]);
+	printf("\t|___|___|___|\n");
+	printf("\t|   |   |   |\n");
+	printf("\t| %c | %c | %c |\n", board[3], board[4], board[5]);
+	printf("\t|___|___|___|\n");
+	printf("\t|   |   |   |\n");
+	printf("\t| %c | %c | %c |\n", board[6], board[7], board[8]);
+	printf("\t|___|___|___|\n");
 }
 
 /*return 1 if there is a winner, game is done
