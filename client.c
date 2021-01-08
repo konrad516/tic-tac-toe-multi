@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 		data_buffer[len] = '\0';
 		strcpy(opp_name, data_buffer);
 
-		printf("\n\t%s invited you. Accept challenge (y/n) ?", opp_name);
+		printf("\n\t%s invited you. Accept challenge (y/n)?", opp_name);
 		
 		fgets(data_buffer, sizeof(data_buffer), stdin);
 		data_buffer[strlen(data_buffer) - 1] = '\0';
