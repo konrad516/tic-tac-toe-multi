@@ -17,6 +17,7 @@ Run clients with server IP
 ./client IPv4
 ```
 ## Screenshots
+<img src="images/server.png" />
 <img src="images/welcome.png" />
 <img src="images/playing.png" />
 <img src="images/score.png" />
